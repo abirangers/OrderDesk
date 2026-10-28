@@ -10,7 +10,7 @@
         </div>
 
         <a href="{{ route('orders.create') }}"
-           class="bg-oxide px-3 py-1.5 font-medium text-white hover:bg-[#9c3c24]">New order</a>
+           class="btn bg-oxide px-3 py-1.5 font-medium text-white hover:bg-[#9c3c24]">New order</a>
     </div>
 
     <form method="GET" action="{{ route('orders.index') }}" class="mb-4 flex flex-wrap items-center gap-2">

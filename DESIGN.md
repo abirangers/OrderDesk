@@ -37,6 +37,9 @@ steel `#3F5A6B`, `done` green-grey `#4A6B52`. No pill badges, no dots.
 - Section spacing is not uniform on purpose: 24px above a page title, 12px below it,
   32px between major blocks. Uniform gaps read as a template.
 - Money right-aligned. Quantities right-aligned. Text left-aligned.
+- Controls are 32px tall from 640px up, because the people using this are on a desktop all
+  day. Below 640px every button, input and select is at least 44px, because a thumb is not
+  a mouse.
 
 ## Deliberately absent
 

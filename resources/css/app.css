@@ -36,4 +36,14 @@
         outline: 2px solid var(--color-oxide);
         outline-offset: 2px;
     }
+
+    /* Desktop density is 32px; below 640px every control has to be thumb-sized. */
+    @media (max-width: 639px) {
+        main button,
+        main input:not([type="hidden"]):not([type="checkbox"]),
+        main select,
+        .btn {
+            min-height: 44px;
+        }
+    }
 }
