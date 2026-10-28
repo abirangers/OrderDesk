@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->string('code', 20)->unique();
+            $table->string('code', 40)->unique();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('customer_name', 100);
             $table->string('customer_phone', 30);
