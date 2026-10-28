@@ -2,7 +2,8 @@
 
 A small order desk for a distributor. Staff enter orders, an admin reviews them and moves
 each one through `draft`, `confirmed`, `shipped`, `done`. Four screens: order list with
-search, new order form, order detail with status transitions, sign in.
+search, new order form, order detail with status transitions and an append-only history,
+sign in.
 
 Laravel 13, MySQL 8, Tailwind 4, Alpine 3.
 
@@ -49,6 +50,8 @@ erDiagram
     users ||--o{ orders : owns
     orders ||--o{ order_items : contains
     products ||--o{ order_items : "referenced by"
+    orders ||--o{ order_events : logs
+    users ||--o{ order_events : acts
 
     users {
         bigint id PK
@@ -74,6 +77,14 @@ erDiagram
         bigint product_id FK
         int qty
         decimal unit_price
+    }
+    order_events {
+        bigint id PK
+        bigint order_id FK
+        bigint user_id FK
+        string from_status
+        string to_status
+        timestamp created_at
     }
 ```
 
@@ -203,7 +214,7 @@ why pessimistic rather than optimistic locking.
 php artisan test
 ```
 
-Sixteen tests, all green on `main`:
+Eighteen tests, all green on `main`:
 
 | Seam | File | What it holds down |
 |---|---|---|
@@ -224,7 +235,6 @@ Saying otherwise would be a claim I cannot back with output.
 - No payment, no shipping integration. Out of scope for a four-screen demo.
 - Login has no throttling. Laravel's `ThrottleRequests` would be the first thing to add.
 - Single context. No multi-tenancy, no per-warehouse stock.
-- No audit trail. Whoever changes a status, nothing records it.
 - Deployment is not set up. It runs locally.
 
 ## Layout
@@ -234,8 +244,9 @@ app/Enums/OrderStatus.php        status values and the allowed transitions
 app/Exceptions/InsufficientStock.php
 app/Policies/OrderPolicy.php     view and update rules
 app/Services/StockService.php    reservation with a row lock
+app/Models/OrderEvent.php        append-only status history
 database/migrations/             schema
 docs/adr/                        one decision record
-tests/                           sixteen tests, four seams
+tests/                           eighteen tests, four seams
 DESIGN.md                        why the interface looks the way it does
 ```

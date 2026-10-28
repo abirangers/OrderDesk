@@ -47,6 +47,31 @@ class DatabaseSeeder extends Seeder
             }
 
             $order->update(['total' => $total]);
+
+            // Walk the order from draft to wherever the seed left it, so the
+            // detail screen has a history that matches the status.
+            $order->events()->create([
+                'user_id' => $order->user_id,
+                'to_status' => \App\Enums\OrderStatus::Draft,
+            ]);
+
+            $from = \App\Enums\OrderStatus::Draft;
+
+            while ($from !== $order->status) {
+                $next = $from->allowedNext()[0] ?? null;
+
+                if ($next === null) {
+                    break;
+                }
+
+                $order->events()->create([
+                    'user_id' => $order->user_id,
+                    'from_status' => $from,
+                    'to_status' => $next,
+                ]);
+
+                $from = $next;
+            }
         }
     }
 }

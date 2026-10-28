@@ -85,4 +85,25 @@
             </table>
         </div>
     </div>
+
+    <div class="mt-6 border border-rule bg-surface p-4">
+        <h2 class="mb-2 text-ink-muted">History</h2>
+        <ol class="space-y-1">
+            @forelse ($order->events as $event)
+                <li class="flex flex-wrap items-baseline gap-2">
+                    <span class="num text-ink-muted">{{ $event->created_at->format('Y-m-d H:i') }}</span>
+                    @if ($event->from_status)
+                        @include('orders.partials.status', ['status' => $event->from_status])
+                        <span class="text-ink-muted">to</span>
+                    @else
+                        <span class="text-ink-muted">created as</span>
+                    @endif
+                    @include('orders.partials.status', ['status' => $event->to_status])
+                    <span class="text-ink-muted">{{ $event->user?->email ?? 'system' }}</span>
+                </li>
+            @empty
+                <li class="text-ink-muted">No history recorded.</li>
+            @endforelse
+        </ol>
+    </div>
 @endsection

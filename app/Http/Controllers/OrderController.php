@@ -78,6 +78,11 @@ class OrderController extends Controller
                 $order->total = $total;
                 $order->save();
 
+                $order->events()->create([
+                    'user_id' => $request->user()->id,
+                    'to_status' => OrderStatus::Draft,
+                ]);
+
                 return $order;
             });
         } catch (InsufficientStock $e) {
@@ -91,7 +96,7 @@ class OrderController extends Controller
     {
         $this->authorize('view', $order);
 
-        $order->load(['items.product', 'user']);
+        $order->load(['items.product', 'user', 'events.user']);
 
         return view('orders.show', ['order' => $order]);
     }
@@ -112,7 +117,14 @@ class OrderController extends Controller
             ]);
         }
 
+        $from = $order->status;
         $order->update(['status' => $next]);
+
+        $order->events()->create([
+            'user_id' => $request->user()->id,
+            'from_status' => $from,
+            'to_status' => $next,
+        ]);
 
         return back()->with('status', "Order moved to {$next->value}.");
     }
