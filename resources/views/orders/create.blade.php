@@ -75,9 +75,8 @@
                                            class="num w-20 border border-rule px-2 py-1.5">
                                 </td>
                                 <td class="px-3 py-2">
-                                    <input type="number" step="0.01" min="0" x-model="line.unit_price"
-                                           :name="`items[${index}][unit_price]`" required
-                                           class="num w-32 border border-rule px-2 py-1.5">
+                                    <span class="num text-ink-muted"
+                                          x-text="(Number(line.unit_price) || 0).toFixed(2)"></span>
                                 </td>
                                 <td class="num px-3 py-2 text-right"
                                     x-text="((Number(line.qty) || 0) * (Number(line.unit_price) || 0)).toFixed(2)"></td>
@@ -106,7 +105,7 @@
             <div class="flex items-baseline gap-3">
                 <span class="text-ink-muted">Total</span>
                 <span class="num text-[18px]" x-text="total.toFixed(2)"></span>
-                <input type="hidden" name="total" :value="total.toFixed(2)" value="0">
+                <span class="text-ink-muted">calculated when the order is saved</span>
             </div>
 
             <div class="flex items-center gap-3">
